@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amorflix - Nuestra Historia</title>
+    <link rel="stylesheet" href="index.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+    <!-- Loader inicial -->
+    <div id="app-loader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-left">
+            <div class="logo">AMOR<span class="logo-accent">FLIX</span></div>
+        </div>
+        <div class="navbar-right">
+            <i class="fas fa-volume-mute nav-icon" id="musicToggle" onclick="toggleMusic()"></i>
+            <input type="range" id="volumeControl" class="volume-slider" min="0" max="1" step="0.01" value="0.5"
+                oninput="changeVolume(this.value)">
+            <i class="fas fa-search nav-icon"></i>
+            <i class="fas fa-bell nav-icon"></i>
+            <div class="user-avatar"></div>
+        </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <section class="hero" id="hero">
+        <div class="hero-bg" id="heroBg">
+            <!-- Se llenará dinámicamente con imagen o video -->
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-crown"></i> TOP 1 en Mi Corazón
+            </div>
+            <h1 class="hero-title">Feliz Cumpleaños,<br /><span class="hero-name">Mi Amor Leti</span></h1>
+            <p class="hero-description">
+                Aclamada por la crítica (nosotros dos). La producción más bonita del año estrena hoy su edición especial
+            </p>
+            <div class="hero-buttons">
+                <button class="btn-play" id="btnPlayHero">
+                    <i class="fas fa-play"></i> Reproducir
+                </button>
+                <button class="btn-info" onclick="openLetter()">
+                    <i class="fas fa-info-circle"></i> Leer Carta
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contenido Principal -->
+    <main class="content-rows" id="main-content">
+        <!-- Se llena con JS -->
+    </main>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">Audio y subtítulos</a>
+            <a href="#">Privacidad</a>
+            <a href="#">Contáctanos</a>
+        </div>
+        <div class="logo">AMOR<span class="logo-accent">FLIX</span></div>
+        <p>© 2024 - Para la persona más increíble del mundo</p>
+    </footer>
+
+    <!-- Modal Visor -->
+    <div class="modal-backdrop" id="modalBackdrop" onclick="closeModalOutside(event)">
+        <div class="modal-box" id="modalBox">
+            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-media" id="modalMedia"></div>
+            <div class="modal-caption" id="modalCaption">
+                <div class="modal-date" id="modalDate"><i class="fas fa-calendar"></i> <span></span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Carta -->
+    <div class="letter-backdrop" id="letterBackdrop" onclick="closeLetterOutside(event)">
+        <div class="letter-box" id="letterBox">
+            <button class="modal-close" onclick="closeLetter()"><i class="fas fa-times"></i></button>
+            <div class="letter-content">
+                <h2 class="letter-title">Para Leti</h2>
+                <p>Hoy no solo se celebra tu vida, también lo afortunado que soy de tenerte. Esta web es solo el tráiler
+                    de todo lo que significas para mí. En la carta te he dejado mis palabras, pero aquí tienes las
+                    imágenes de nuestra historia.</p>
+                <p>Bienvenida al archivo secreto de nuestra serie favorita. Ponte cómoda y dale a reproducir, porque el
+                    mejor viaje siempre es el que comparto contigo.</p>
+                <p class="letter-signature">Te quiero infinitamente ❤️</p>
+            </div>
+            <button class="btn-close-letter" onclick="closeLetter()">
+                <i class="fas fa-heart"></i> Cerrar carta
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <audio id="bgMusic" src="img/Bruno Mars - Risk It All (Sub. Español Lyrics).mp3" loop></audio>
+</body>
+
+</html>

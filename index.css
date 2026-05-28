@@ -1,0 +1,1076 @@
+:root {
+    --fondo: #141414;
+    --rojo: #E50914;
+    --blanco: #ffffff;
+    --gris-claro: #e5e5e5;
+    --gris-medio: #808080;
+    --gris-oscuro: #2a2a2a;
+    --rojo-hover: #ff0a16;
+    --radio: 8px;
+    --fuente-titulo: 'Bebas Neue', sans-serif;
+    --fuente-texto: 'Montserrat', sans-serif;
+    --transicion: 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* Loader */
+#app-loader {
+    position: fixed;
+    inset: 0;
+    background: var(--fondo);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s;
+}
+
+#app-loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(229, 9, 20, 0.2);
+    border-radius: 50%;
+    border-top-color: var(--rojo);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--fondo);
+    color: var(--blanco);
+    font-family: var(--fuente-texto);
+    overflow-x: hidden;
+    cursor: default;
+    -webkit-font-smoothing: subpixel-antialiased;
+    text-rendering: geometricPrecision;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img,
+video {
+    display: block;
+    max-width: 100%;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: var(--fuente-texto);
+}
+
+/* ====================================================
+   NAVBAR
+   ==================================================== */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 4%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
+    transition: background var(--transicion), padding var(--transicion), box-shadow var(--transicion);
+}
+
+/* Cuando se hace scroll, el navbar se oscurece */
+.navbar.scrolled {
+    background: rgba(10, 10, 10, 0.98);
+    padding: 0.7rem 4%;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Logo */
+.logo {
+    font-family: var(--fuente-titulo);
+    font-size: 2.5rem;
+    letter-spacing: 1.5px;
+    color: var(--blanco);
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.logo:hover {
+    transform: scale(1.1);
+}
+
+.logo-accent {
+    color: var(--rojo);
+}
+
+.nav-icon {
+    font-size: 1.1rem;
+    color: var(--blanco);
+    cursor: pointer;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.nav-icon:hover {
+    transform: scale(1.1);
+    color: var(--gris-claro);
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    background: var(--rojo);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.3s;
+    background-image: linear-gradient(45deg, var(--rojo), #b9090b);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-avatar:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+}
+
+@keyframes heartbeat {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.hero {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+}
+
+/* Imagen de fondo del hero */
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #141414;
+}
+
+.hero-bg video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transform: translateZ(0);
+    /* Forzar aceleración GPU */
+    backface-visibility: hidden;
+}
+
+.hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+}
+
+/* Overlay degradado */
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(to top, rgba(20, 20, 20, 0.9) 0%, rgba(20, 20, 20, 0) 50%),
+        linear-gradient(to right, rgba(20, 20, 20, 0.4) 0%, transparent 40%);
+    z-index: 1;
+}
+
+/* Contenido hero */
+.hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 4% 120px;
+    max-width: 700px;
+    animation: fadeInUp 1.2s ease both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Badge "Nuestra Historia" */
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--rojo);
+    color: var(--blanco);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    animation: fadeInUp 1.2s ease 0.2s both;
+}
+
+/* Título del hero */
+.hero-title {
+    font-family: var(--fuente-titulo);
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: 2px;
+    text-shadow: 2px 4px 20px rgba(0, 0, 0, 0.8);
+    margin-bottom: 0.5rem;
+    animation: fadeInUp 1.2s ease 0.3s both;
+}
+
+/* Nombre de la pareja en el título */
+.hero-name {
+    color: var(--rojo);
+    display: block;
+    font-size: 1.1em;
+}
+
+/* Descripción */
+.hero-description {
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    font-weight: 300;
+    color: var(--gris-claro);
+    line-height: 1.6;
+    max-width: 520px;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.8);
+    animation: fadeInUp 1.2s ease 0.4s both;
+}
+
+/* Botones del hero */
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeInUp 1.2s ease 0.55s both;
+}
+
+/* Botón "Reproducir" */
+.btn-play {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--blanco);
+    color: #000;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 4px;
+    transition: background var(--transicion), transform var(--transicion), box-shadow var(--transicion);
+    letter-spacing: 0.5px;
+}
+
+.btn-play:hover {
+    background: rgba(255, 255, 255, 0.85);
+    transform: scale(1.04);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+}
+
+/* Botón "Más información" */
+.btn-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: rgba(109, 109, 110, 0.7);
+    color: var(--blanco);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 12px 28px;
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background var(--transicion), transform var(--transicion);
+    letter-spacing: 0.5px;
+}
+
+.btn-info:hover {
+    background: rgba(109, 109, 110, 0.9);
+    transform: scale(1.04);
+}
+
+/* Flecha scroll-down */
+.scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    color: var(--gris-medio);
+    font-size: 1.4rem;
+    animation: bounce 2s ease infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    50% {
+        transform: translateX(-50%) translateY(8px);
+    }
+}
+
+/* ====================================================
+   FILAS DE CONTENIDO
+   ==================================================== */
+.content-rows {
+    padding: 2rem 0 4rem;
+    position: relative;
+    z-index: 5;
+}
+
+.row {
+    margin-bottom: 4rem;
+    padding: 0 4%;
+    transition: transform 0.5s ease;
+}
+
+.row:hover {
+    transform: translateY(-5px);
+}
+
+/* Título de cada fila */
+.row-title {
+    font-family: var(--fuente-titulo);
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    letter-spacing: 3px;
+    margin-bottom: 1.5rem;
+    color: var(--gris-claro);
+    transition: all var(--transicion);
+    display: inline-block;
+    border-left: 4px solid var(--rojo);
+    padding-left: 15px;
+}
+
+.row-title:hover {
+    color: var(--blanco);
+    letter-spacing: 5px;
+}
+
+/* ── Slider wrapper ──────────────────────────────────── */
+.slider-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Flechas del slider */
+.slider-arrow {
+    position: absolute;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: var(--blanco);
+    width: 50px;
+    top: 20px;
+    /* Alineado con el inicio de las tarjetas */
+    bottom: 12px;
+    /* Alineado con el final de las tarjetas */
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    border-radius: 0;
+    transition: background var(--transicion), transform var(--transicion), opacity var(--transicion);
+    opacity: 0;
+    backdrop-filter: blur(4px);
+}
+
+.slider-wrapper:hover .slider-arrow {
+    opacity: 1;
+}
+
+.arrow-left {
+    left: 0;
+}
+
+.arrow-right {
+    right: 0;
+}
+
+.slider-arrow:hover {
+    background: rgba(0, 0, 0, 0.8);
+    color: var(--rojo);
+}
+
+/* ── El slider en sí ─────────────────────────────────── */
+.slider {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding-bottom: 12px;
+    padding-top: 20px;
+    /* Espacio para el scale del hover */
+    /* Ocultar scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    width: 100%;
+}
+
+.slider::-webkit-scrollbar {
+    display: none;
+}
+
+/* ── Tarjetas ─────────────────────────────────────────── */
+.card {
+    flex: 0 0 auto;
+    width: clamp(200px, 25vw, 320px);
+    scroll-snap-align: start;
+    border-radius: var(--radio);
+    overflow: visible;
+    /* visible para que el scale no quede cortado */
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    transition: transform var(--transicion), z-index 0s;
+    will-change: transform;
+}
+
+/* Tarjeta destacada (más ancha) */
+.card-featured {
+    width: clamp(200px, 22vw, 300px);
+}
+
+/* Efecto hover Netflix: ampliar y mostrar overlay */
+.card:hover {
+    transform: scale(1.15);
+    z-index: 20;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+
+/* Contenedor de imagen */
+.card-img-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radio);
+    overflow: hidden;
+    background: var(--gris-oscuro);
+}
+
+.card-img-wrap img,
+.card-img-wrap video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translateZ(0);
+    /* Forzar aceleración por hardware (GPU) */
+    backface-visibility: hidden;
+    transition: transform var(--transicion);
+    /* Placeholder visual cuando no hay imagen */
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+}
+
+.card:hover .card-img-wrap img {
+    transform: scale(1.05);
+}
+
+/* Overlay de la tarjeta */
+.card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 60%);
+    opacity: 0;
+    transition: opacity var(--transicion);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-radius: var(--radio);
+}
+
+.card:hover .card-overlay {
+    opacity: 1;
+}
+
+/* Meta info (fecha y label) */
+.card-meta {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.card-date {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--gris-claro);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.card-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    background: rgba(229, 9, 20, 0.85);
+    color: var(--blanco);
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.video-label {
+    background: rgba(30, 30, 30, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Info debajo de la tarjeta */
+.card-info {
+    padding: 6px 2px 0;
+}
+
+.card-info p {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--gris-medio);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color var(--transicion);
+}
+
+.card:hover .card-info p {
+    color: var(--blanco);
+}
+
+/* Borde rojo inferior al hacer hover */
+.card::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 40%;
+    height: 3px;
+    background: var(--rojo);
+    border-radius: 3px;
+    transition: transform var(--transicion);
+}
+
+.card:hover::after {
+    transform: translateX(-50%) scaleX(1);
+}
+
+/* ====================================================
+   FOOTER
+   ==================================================== */
+.footer {
+    padding: 3rem 4%;
+    text-align: center;
+    color: var(--gris-medio);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--gris-oscuro);
+}
+
+.footer p {
+    margin-top: 0.5rem;
+    font-weight: 300;
+}
+
+/* ====================================================
+   MODAL — VISOR DE FOTOS / VIDEOS
+   ==================================================== */
+.modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.92);
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.modal-backdrop.active {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Caja del modal */
+.modal-box {
+    position: relative;
+    background: var(--fondo-modal);
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 960px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.07);
+    animation: modalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Evitar scroll en el body cuando el modal está abierto */
+body.modal-open {
+    overflow: hidden;
+}
+
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: scale(0.88) translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Botón cerrar */
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.7);
+    color: var(--blanco);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transicion), transform var(--transicion);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-close:hover {
+    background: var(--rojo);
+    transform: rotate(90deg) scale(1.1);
+}
+
+/* Área de la media (imagen o video) */
+.modal-media {
+    width: 100%;
+    background: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 85vh;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.5);
+    transition: opacity 0.5s ease;
+}
+
+.modal-media img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    /* Ver la foto COMPLETA */
+    image-rendering: -webkit-optimize-contrast;
+}
+
+.modal-media video {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    /* Ver el vídeo COMPLETO */
+    outline: none;
+}
+
+/* Caption del modal */
+.modal-caption {
+    padding: 1.5rem 2rem;
+    background: linear-gradient(to bottom, var(--fondo-modal), #111);
+}
+
+.modal-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--rojo);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.6rem;
+}
+
+.modal-caption p {
+    font-size: clamp(0.9rem, 2vw, 1.05rem);
+    font-weight: 300;
+    color: var(--gris-claro);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+/* Corazones decorativos */
+.modal-hearts {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.modal-hearts i {
+    color: var(--rojo);
+    font-size: 0.9rem;
+    animation: heartbeat 2s ease-in-out infinite;
+}
+
+.modal-hearts i:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.modal-hearts i:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+/* ====================================================
+   MODAL — CARTA DE CUMPLEAÑOS
+   ==================================================== */
+.letter-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.92);
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.letter-backdrop.active {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Caja de la carta */
+.letter-box {
+    position: relative;
+    background: #fdf6e3;
+    /* Color pergamino/carta */
+    border-radius: 12px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    animation: modalIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    color: #3a2a1a;
+    /* Textura sutil de papel */
+    background-image:
+        linear-gradient(rgba(229, 9, 20, 0.04) 1px, transparent 1px);
+    background-size: 100% 28px;
+}
+
+/* Botón cerrar de la carta */
+.letter-box .modal-close {
+    background: rgba(229, 9, 20, 0.15);
+    color: #3a2a1a;
+    border-color: rgba(229, 9, 20, 0.3);
+}
+
+.letter-box .modal-close:hover {
+    background: var(--rojo);
+    color: var(--blanco);
+}
+
+/* Decoración de corazones superiores */
+.letter-deco {
+    display: flex;
+    justify-content: center;
+    gap: 0.7rem;
+    padding: 1.5rem 0 0;
+}
+
+.letter-deco i {
+    color: var(--rojo);
+    font-size: 1.3rem;
+    animation: heartbeat 2s ease-in-out infinite;
+}
+
+.letter-deco i:nth-child(1) {
+    font-size: 1rem;
+    animation-delay: 0s;
+}
+
+.letter-deco i:nth-child(2) {
+    font-size: 1.5rem;
+    animation-delay: 0.25s;
+}
+
+.letter-deco i:nth-child(3) {
+    font-size: 1rem;
+    animation-delay: 0.5s;
+}
+
+/* Contenido de la carta */
+.letter-content {
+    padding: 1.5rem 2.5rem 2rem;
+    font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.letter-title {
+    font-family: var(--fuente-titulo);
+    font-size: 2.5rem;
+    color: var(--rojo);
+    letter-spacing: 3px;
+    text-align: center;
+    margin-bottom: 0.3rem;
+}
+
+.letter-date {
+    text-align: center;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: #7a5c3a;
+    margin-bottom: 1.5rem;
+}
+
+.letter-content p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #3a2a1a;
+    margin-bottom: 1.1rem;
+    text-indent: 1.5rem;
+}
+
+.letter-signature {
+    text-align: right;
+    font-style: italic;
+    margin-top: 2rem;
+    font-size: 1.05rem;
+    color: var(--rojo) !important;
+    text-indent: 0 !important;
+}
+
+/* Botón cerrar carta */
+.btn-close-letter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0 auto 2rem;
+    background: var(--rojo);
+    color: var(--blanco);
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 10px 24px;
+    border-radius: 4px;
+    transition: background var(--transicion), transform var(--transicion);
+    letter-spacing: 0.5px;
+}
+
+.btn-close-letter:hover {
+    background: var(--rojo-hover);
+    transform: scale(1.05);
+}
+
+/* ====================================================
+   RESPONSIVE — MÓVIL
+   ==================================================== */
+@media (max-width: 768px) {
+
+    /* Navbar */
+    .nav-links {
+        display: none;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .logo-text {
+        font-size: 1.6rem;
+    }
+
+    /* Hero */
+    .hero-content {
+        padding: 0 5% 100px;
+        max-width: 100%;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .btn-play,
+    .btn-info {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 24px;
+    }
+
+    /* Filas y sliders */
+    .row {
+        padding: 0 3%;
+    }
+
+    .card {
+        width: clamp(140px, 42vw, 200px);
+    }
+
+    .card-featured {
+        width: clamp(160px, 50vw, 240px);
+    }
+
+    /* Flechas del slider: siempre visibles en móvil */
+    .slider-arrow {
+        opacity: 1;
+        height: 60px;
+        width: 36px;
+    }
+
+    .arrow-left {
+        left: -18px;
+    }
+
+    .arrow-right {
+        right: -18px;
+    }
+
+    /* Modal */
+    .modal-caption {
+        padding: 1rem 1.2rem;
+    }
+
+    .letter-content {
+        padding: 1rem 1.5rem 1.5rem;
+    }
+
+    .letter-title {
+        font-size: 2rem;
+    }
+}
+
+/* Estilos para el control de música */
+@keyframes pulse-music {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.music-playing {
+    animation: pulse-music 1.5s infinite ease-in-out;
+    color: var(--rojo) !important;
+}
+
+/* Estilos para el control de volumen */
+.volume-slider {
+    width: 60px;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.2);
+    height: 4px;
+    border-radius: 2px;
+    outline: none;
+    margin-left: -5px;
+    margin-right: 10px;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: var(--rojo);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2.2rem;
+    }
+
+    .card {
+        width: clamp(130px, 46vw, 180px);
+    }
+
+    .row-title {
+        font-size: 1.1rem;
+    }
+}
