@@ -77,14 +77,14 @@ document.addEventListener('DOMContentLoaded', () => {
     renderRows();
     updateMusicUI();
 
-    // Intentar reproducir directamente (el navegador suele bloquearlo, pero lo dejamos listo)
-    startMusic();
-
-    // ESCUCHADOR GLOBAL: Cualquier clic en la página activa el sonido si aún no ha empezado.
-    // Esto permite que NO tengas que darle al botoncito específicamente.
-    const autoUnlock = () => { if (!musicStarted) startMusic(); };
-    document.addEventListener('click', autoUnlock, { once: true });
-    document.addEventListener('touchstart', autoUnlock, { once: true });
+    // ESCUCHADORES MÚLTIPLES: Intentamos activar el audio con CUALQUIER actividad inicial
+    const autoUnlock = () => {
+        if (!musicStarted) startMusic();
+    };
+    
+    ['click', 'touchstart', 'scroll', 'keydown', 'mousedown', 'wheel'].forEach(event => {
+        document.addEventListener(event, autoUnlock, { once: true, passive: true });
+    });
 
     let scrollTimer;
     window.addEventListener('scroll', () => {
@@ -98,7 +98,11 @@ document.addEventListener('DOMContentLoaded', () => {
             scrollTimer = true;
         }
     }, { passive: true });
-    setTimeout(() => document.getElementById('app-loader').classList.add('hidden'), 1000);
+
+    setTimeout(() => {
+        document.getElementById('app-loader').classList.add('hidden');
+        startMusic(); // Intentar reproducir justo cuando desaparece el loader
+    }, 1000);
 });
 
 /**
@@ -242,56 +246,90 @@ function scrollSlider(btn, direction) {
 }
 
 function startSlideshow() {
-    if (slideshowInterval) clearInterval(slideshowInterval);
+    if (slideshowInterval) clearTimeout(slideshowInterval);
 
     // Creamos una copia de los elementos y la barajamos al iniciar el modo reproducción
     let slideshowPool = [...rawItems];
     shuffleArray(slideshowPool);
     let currentIndex = 0;
 
-    const playNext = () => {
+    const playNext = async () => {
         const mediaContainer = document.getElementById('modalMedia');
-        // Desvanecer el contenido actual
+        
+        // 1. Iniciar desvanecimiento de salida
         mediaContainer.style.opacity = '0';
+        
+        // Esperar a que termine la animación de salida (0.5s en CSS)
+        await new Promise(resolve => setTimeout(resolve, 500));
 
-        setTimeout(() => {
-            currentIndex++;
-            // Si ya hemos mostrado todos, volvemos a barajar para la siguiente ronda
-            if (currentIndex >= slideshowPool.length) {
-                shuffleArray(slideshowPool);
-                currentIndex = 0;
-            }
+        currentIndex++;
+        if (currentIndex >= slideshowPool.length) {
+            shuffleArray(slideshowPool);
+            currentIndex = 0;
+        }
 
-            const item = slideshowPool[currentIndex];
-            updateModalMedia(item.src, item.type === 'video', true);
+        const item = slideshowPool[currentIndex];
+        
+        // 2. Cargar el medio y esperar a que esté listo (Promesa)
+        await updateModalMedia(item.src, item.type === 'video', true);
 
-            // Mantener la música sonando durante el slideshow
-            const music = document.getElementById('bgMusic');
-            if (!isMusicMuted && music.paused) music.play().catch(() => { });
-            updateMusicUI();
+        // 3. Pre-cargar el siguiente elemento en segundo plano para evitar esperas después
+        const nextItem = slideshowPool[(currentIndex + 1) % slideshowPool.length];
+        if (nextItem.type === 'foto') {
+            const imgPreload = new Image();
+            imgPreload.src = nextItem.src;
+        }
 
-            // Volver a mostrar con el nuevo contenido
-            mediaContainer.style.opacity = '1';
-        }, 500); // Tiempo que coincide con la transición CSS
+        // Mantener la música sonando
+        const music = document.getElementById('bgMusic');
+        if (!isMusicMuted && music.paused) music.play().catch(() => { });
+        updateMusicUI();
+
+        // 4. Iniciar desvanecimiento de entrada con el contenido ya cargado
+        mediaContainer.style.opacity = '1';
+        
+        // Programar el siguiente después de mostrar el actual
+        slideshowInterval = setTimeout(playNext, 3000);
     };
 
     // Abrir el primero de la lista barajada inmediatamente
     openModal(slideshowPool[0].src, slideshowPool[0].type === 'video', true);
-
-    // Programar el resto (2s visible + 0.5s de transición)
-    slideshowInterval = setInterval(playNext, 2500);
+    slideshowInterval = setTimeout(playNext, 3500);
 }
 
 function updateModalMedia(src, isVideo, muted = false) {
-    document.getElementById('modalMedia').innerHTML = isVideo
-        ? `<video src="${src}" controls autoplay playsinline preload="auto" ${muted ? 'muted' : ''}></video>`
-        : `<img src="${src}" alt="Recuerdo">`;
+    return new Promise((resolve) => {
+        const container = document.getElementById('modalMedia');
+        if (isVideo) {
+            container.innerHTML = `<video src="${src}" controls autoplay playsinline preload="auto" ${muted ? 'muted' : ''}></video>`;
+            const video = container.querySelector('video');
+            video.oncanplay = () => resolve();
+            video.onerror = () => resolve();
+            // Fallback por si el video tarda demasiado
+            setTimeout(resolve, 4000);
+        } else {
+            const img = new Image();
+            img.onload = () => {
+                container.innerHTML = '';
+                container.appendChild(img);
+                resolve();
+            };
+            img.onerror = () => resolve();
+            img.src = src;
+            img.alt = "Recuerdo";
+            // Fallback
+            setTimeout(resolve, 3000);
+        }
+    });
 }
 
-function openModal(src, isVideo, muted = false) {
+async function openModal(src, isVideo, muted = false) {
     startMusic();
+    const mediaContainer = document.getElementById('modalMedia');
+    mediaContainer.style.opacity = '0';
     document.body.classList.add('modal-open');
-    updateModalMedia(src, isVideo, muted);
+    
+    await updateModalMedia(src, isVideo, muted);
 
     const music = document.getElementById('bgMusic');
     // Si es un vídeo y NO está silenciado (clic manual), pausamos la música de fondo
@@ -303,7 +341,7 @@ function openModal(src, isVideo, muted = false) {
     }
     updateMusicUI();
 
-    document.getElementById('modalMedia').style.opacity = '1';
+    mediaContainer.style.opacity = '1';
     document.getElementById('modalDate').style.display = 'none';
     document.getElementById('modalBackdrop').classList.add('active');
 }
@@ -321,7 +359,7 @@ function closeModal() {
     updateMusicUI();
 
     if (slideshowInterval) {
-        clearInterval(slideshowInterval);
+        clearTimeout(slideshowInterval);
         slideshowInterval = null;
     }
 }
