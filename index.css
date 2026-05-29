@@ -993,16 +993,21 @@ body.modal-open {
     /* Flechas del slider: siempre visibles en móvil */
     .slider-arrow {
         opacity: 1;
-        height: 60px;
-        width: 36px;
+        height: 70px;
+        width: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        bottom: auto;
+        font-size: 1.2rem;
+        background: rgba(0, 0, 0, 0.4);
     }
 
     .arrow-left {
-        left: -18px;
+        left: 0;
     }
 
     .arrow-right {
-        right: -18px;
+        right: 0;
     }
 
     /* Modal */
