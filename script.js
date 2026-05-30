@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const autoUnlock = () => {
         if (!musicStarted) startMusic();
     };
-    
+
     ['click', 'touchstart', 'scroll', 'keydown', 'mousedown', 'wheel'].forEach(event => {
         document.addEventListener(event, autoUnlock, { once: true, passive: true });
     });
@@ -221,7 +221,7 @@ function renderRows() {
                     <div class="card" onclick="openModal('${item.src}', ${item.type === 'video'})">
                         <div class="card-img-wrap">
                             ${item.type === 'video'
-                ? `<video src="${item.src}" muted loop playsinline preload="metadata" onmouseenter="this.play().catch(()=>{})" onmouseleave="this.pause()"></video>`
+                ? `<video src="${item.src}#t=0.001" muted loop playsinline preload="auto" onmouseenter="this.play().catch(()=>{})" onmouseleave="this.pause()"></video>`
                 : `<img src="${item.src}" alt="${item.title}" loading="lazy">`
             }
                             <div class="card-overlay">
@@ -255,10 +255,10 @@ function startSlideshow() {
 
     const playNext = async () => {
         const mediaContainer = document.getElementById('modalMedia');
-        
+
         // 1. Iniciar desvanecimiento de salida
         mediaContainer.style.opacity = '0';
-        
+
         // Esperar a que termine la animación de salida (0.5s en CSS)
         await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -269,7 +269,7 @@ function startSlideshow() {
         }
 
         const item = slideshowPool[currentIndex];
-        
+
         // 2. Cargar el medio y esperar a que esté listo (Promesa)
         await updateModalMedia(item.src, item.type === 'video', true);
 
@@ -287,7 +287,7 @@ function startSlideshow() {
 
         // 4. Iniciar desvanecimiento de entrada con el contenido ya cargado
         mediaContainer.style.opacity = '1';
-        
+
         // Programar el siguiente después de mostrar el actual
         slideshowInterval = setTimeout(playNext, 3000);
     };
@@ -328,7 +328,7 @@ async function openModal(src, isVideo, muted = false) {
     const mediaContainer = document.getElementById('modalMedia');
     mediaContainer.style.opacity = '0';
     document.body.classList.add('modal-open');
-    
+
     await updateModalMedia(src, isVideo, muted);
 
     const music = document.getElementById('bgMusic');
